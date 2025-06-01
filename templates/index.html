@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Asistente Inteligente de Menú Gastronómico</title>
+  <style>
+    /* ----------- Estilos Generales ----------- */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+
+    header {
+      background-color: #2c3e50;
+      padding: 1rem 0;
+      text-align: center;
+      color: #fff;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    section#intro p {
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    /* ----------- Formulario ----------- */
+    form {
+      background-color: #fff;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      margin-top: 1rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 0.3rem;
+      font-size: 1rem;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group textarea {
+      width: 100%;
+      padding: 0.5rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .error-message {
+      color: #e74c3c;
+      font-size: 0.9rem;
+      margin-top: 0.2rem;
+      display: block;
+      height: 1.2rem; /* reserva espacio aunque esté vacío */
+    }
+
+    button#btn-generate {
+      background-color: #2980b9;
+      color: #fff;
+      border: none;
+      padding: 0.8rem 1.2rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button#btn-generate:disabled {
+      background-color: #95a5a6;
+      cursor: not-allowed;
+    }
+
+    button#btn-generate:hover:not(:disabled) {
+      background-color: #1c5980;
+    }
+
+    #loading-spinner {
+      display: none;
+      margin-left: 1rem;
+      font-style: italic;
+      font-size: 0.95rem;
+      color: #555;
+    }
+
+    /* ----------- Resultado ----------- */
+    #result-section {
+      margin-top: 2rem;
+    }
+
+    #result-section h2 {
+      margin-bottom: 0.5rem;
+      font-size: 1.4rem;
+    }
+
+    #menu-result {
+      background-color: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      white-space: pre-wrap; /* respeta saltos de línea */
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      min-height: 100px;
+    }
+
+    /* ----------- Responsive (2 columnas en pantallas anchas) ----------- */
+    @media (min-width: 768px) {
+      .form-row {
+        display: flex;
+        gap: 1rem;
+      }
+      .form-row .form-group {
+        flex: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Asistente Inteligente de Menú Gastronómico</h1>
+  </header>
+
+  <main>
+    <section id="intro">
+      <p>
+        Completa los campos a continuación para generar un menú optimizado para tu restaurante. Cada plato incluirá
+        nombre, ingredientes, descripción, costo estimado y precio sugerido.
+      </p>
+    </section>
+
+    <section id="form-section">
+      <form id="menu-form">
+        <!-- Primera fila: Perfil del cliente y Presupuesto -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="perfil_cliente">Perfil del cliente</label>
+            <input
+              type="text"
+              id="perfil_cliente"
+              name="perfil_cliente"
+              placeholder="Ej. Familias con niños, ejecutivos, foodies, etc."
+              required
+            />
+            <small class="error-message" id="error-perfil_cliente"></small>
+          </div>
+
+          <div class="form-group">
+            <label for="presupuesto">Presupuesto máximo por plato (USD)</label>
+            <input
+              type="number"
+              id="presupuesto"
+              name="presupuesto"
+              step="0.01"
+              min="0.01"
+              placeholder="Por ejemplo: 5.00"
+              required
+            />
+            <small class="error-message" id="error-presupuesto"></small>
+          </div>
+        </div>
+
+        <!-- Segunda fila: Tiempo máximo y Estilo -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="tiempo_max">Tiempo máximo de preparación (minutos)</label>
+            <input
+              type="number"
+              id="tiempo_max"
+              name="tiempo_max"
+              min="1"
+              placeholder="Por ejemplo: 20"
+              required
+            />
+            <small class="error-message" id="error-tiempo_max"></small>
+          </div>
+
+          <div class="form-group">
+            <label for="estilo">Estilo de cocina deseado</label>
+            <input
+              type="text"
+              id="estilo"
+              name="estilo"
+              placeholder="Ej. Mediterránea, gourmet, casera, fusión asiática"
+              required
+            />
+            <small class="error-message" id="error-estilo"></small>
+          </div>
+        </div>
+
+        <!-- Tercera fila: Ingredientes y Restricciones -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="ingredientes">Ingredientes disponibles</label>
+            <textarea
+              id="ingredientes"
+              name="ingredientes"
+              placeholder="Lista de ingredientes separados por comas"
+              required
+            ></textarea>
+            <small class="error-message" id="error-ingredientes"></small>
+          </div>
+
+          <div class="form-group">
+            <label for="restricciones">Restricciones dietéticas o alergias</label>
+            <input
+              type="text"
+              id="restricciones"
+              name="restricciones"
+              placeholder="Ej. Sin gluten, vegano, ninguno"
+              required
+            />
+            <small class="error-message" id="error-restricciones"></small>
+          </div>
+        </div>
+
+        <!-- Botón de envío -->
+        <div class="form-group">
+          <button type="submit" id="btn-generate">Generar Menú</button>
+          <span id="loading-spinner">Generando menú...</span>
+        </div>
+      </form>
+    </section>
+
+    <section id="result-section">
+      <h2>Menú Generado</h2>
+      <div id="menu-result">Aquí aparecerá el menú generado.</div>
+    </section>
+  </main>
+
+  <script>
+    // Función para validar y enviar el formulario
+    document.getElementById("menu-form").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      // Limpiar mensajes de error
+      ["perfil_cliente", "presupuesto", "tiempo_max", "estilo", "ingredientes", "restricciones"].forEach(function (
+        field
+      ) {
+        document.getElementById("error-" + field).innerText = "";
+      });
+
+      // Obtener valores
+      const perfil = document.getElementById("perfil_cliente").value.trim();
+      const presupuesto = parseFloat(document.getElementById("presupuesto").value);
+      const tiempoMax = parseInt(document.getElementById("tiempo_max").value);
+      const estilo = document.getElementById("estilo").value.trim();
+      const ingredientes = document.getElementById("ingredientes").value.trim();
+      const restricciones = document.getElementById("restricciones").value.trim();
+
+      let isValid = true;
+
+      // Validaciones
+      if (!perfil) {
+        document.getElementById("error-perfil_cliente").innerText = "Este campo es obligatorio.";
+        isValid = false;
+      }
+      if (isNaN(presupuesto) || presupuesto <= 0) {
+        document.getElementById("error-presupuesto").innerText = "Ingrese un valor válido (> 0).";
+        isValid = false;
+      }
+      if (isNaN(tiempoMax) || tiempoMax <= 0) {
+        document.getElementById("error-tiempo_max").innerText = "Ingrese un valor válido (> 0).";
+        isValid = false;
+      }
+      if (!estilo) {
+        document.getElementById("error-estilo").innerText = "Este campo es obligatorio.";
+        isValid = false;
+      }
+      if (!ingredientes) {
+        document.getElementById("error-ingredientes").innerText = "Este campo es obligatorio.";
+        isValid = false;
+      }
+      if (!restricciones) {
+        document.getElementById("error-restricciones").innerText = "Este campo es obligatorio.";
+        isValid = false;
+      }
+      if (!isValid) return;
+
+      // Mostrar spinner y deshabilitar botón
+      document.getElementById("btn-generate").disabled = true;
+      document.getElementById("loading-spinner").style.display = "inline";
+
+      const payload = {
+        perfil_cliente: perfil,
+        presupuesto: presupuesto,
+        tiempo_max: tiempoMax,
+        estilo: estilo,
+        ingredientes: ingredientes,
+        restricciones: restricciones,
+      };
+
+      try {
+        const response = await fetch("/api/generate-menu", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) throw new Error("Error en la petición");
+
+        const data = await response.json();
+        const menuTexto = data.menu || "No se recibió un menú válido.";
+
+        document.getElementById("menu-result").innerText = menuTexto;
+      } catch (error) {
+        document.getElementById("menu-result").innerText =
+          "Error al generar el menú. Por favor inténtalo de nuevo más tarde.";
+      } finally {
+        // Ocultar spinner y habilitar botón nuevamente
+        document.getElementById("btn-generate").disabled = false;
+        document.getElementById("loading-spinner").style.display = "none";
+      }
+    });
+  </script>
+</body>
+</html>
