@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="[https://raw.githubusercontent.com/tu-usuario/tu-repo/main/assets/logo.png](https://avatars.githubusercontent.com/u/72231436?v=4)" alt="🎨" width="100"/>
+  <img src="https://avatars.githubusercontent.com/u/72231436?v=4" alt="🎨" width="100"/>
 </p>
 
 # 🍽️ Asistente Inteligente de Menú Gastronómico
