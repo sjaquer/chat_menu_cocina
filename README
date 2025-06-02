@@ -1,0 +1,125 @@
+# Proyecto Final – Asistente Inteligente para Diseño de Menús Gastronómicos
+
+## Resumen Ejecutivo
+
+Este proyecto propone el desarrollo de un **asistente inteligente para el diseño de menús gastronómicos**, orientado a restaurantes y negocios del rubro alimentario. Utilizando el **API de OpenAI** y desarrollado en **Python**, la aplicación tiene como finalidad generar menús personalizados basados en variables como el perfil del cliente, los costos de ingredientes, el margen de ganancia esperado y los tiempos de preparación. La interfaz será implementada utilizando **Bolt.new** y la lógica de automatización se realizará mediante **Make.com**.
+
+---
+
+## Objetivo del Proyecto
+
+Crear una aplicación web sencilla e intuitiva que permita a restaurantes generar menús inteligentes, optimizados para:
+
+* Público objetivo (familias, ejecutivos, entusiastas gourmet, entre otros).
+* Disponibilidad y costo de ingredientes.
+* Preferencias nutricionales o dietas específicas (vegana, keto, sin gluten, etc.).
+* Margen de beneficio esperado.
+* Tiempo máximo de preparación por plato.
+
+---
+
+## Herramientas y Tecnologías Utilizadas
+
+| Herramienta        | Propósito                                                            |
+| ------------------ | -------------------------------------------------------------------- |
+| Python             | Backend de la aplicación                                             |
+| OpenAI API (GPT-4) | Generación de menús, platos, descripciones y lógica de recomendación |
+| Bolt.new           | Desarrollo de la interfaz web                                        |
+| Make.com           | Automatización entre Bolt, Python y OpenAI                           |
+
+---
+
+## Caso de Negocio
+
+**Problema identificado:** Muchos restaurantes diseñan sus menús de forma subjetiva o empírica, sin tener en cuenta variables clave como la rentabilidad, las preferencias del cliente y la capacidad operativa. Esto puede derivar en pérdidas económicas, baja rotación de platos y descontento del público objetivo.
+
+**Solución propuesta:** Un asistente inteligente que procese datos clave del negocio (clientes, costos, tiempos) para generar **recomendaciones de menús viables y atractivos**, con enfoque estratégico y comercial.
+
+---
+
+## Selección del Modelo de IA
+
+### Modelo principal utilizado
+
+* **Modelo:** GPT-4-turbo (OpenAI)
+* **Ventajas:** Alta capacidad de contextualización, generación coherente de textos complejos y buena relación costo-eficiencia.
+
+#### Parámetros configurados:
+
+* `temperature`: 0.7
+* `max_tokens`: 1000
+* `top_p`: 1
+* `frequency_penalty`: 0
+* `presence_penalty`: 0.2
+
+### Consideraciones para otros modelos alternativos:
+
+En una futura versión del proyecto, se podría considerar el uso de otros modelos de IA generativa, tales como:
+
+* **Gemma (de Google Gemini):** Buen desempeño en tareas multilingües y generación contextual con capacidad para integrarse en aplicaciones web mediante Vertex AI.
+* **Claude (Anthropic):** Enfocado en seguridad y explicabilidad, útil para generar menús con contexto de alérgenos o restricciones estrictas.
+* **Mistral o LLaMA (Meta):** Modelos open-source que pueden alojarse en servidores privados si se requiere independencia de proveedores externos.
+
+---
+
+## Prompt Engineering – Prompt Base Utilizado
+
+```plaintext
+Actúa como un chef profesional con experiencia en marketing gastronómico y gestión de costos. A partir de los siguientes datos, genera un menú de 3 platos (entrada, plato principal y postre) diseñado específicamente para el perfil del restaurante.
+
+Perfil del cliente: {{perfil_cliente}}
+Ingredientes disponibles: {{ingredientes}}
+Presupuesto máximo por plato: {{presupuesto}}
+Tiempo máximo de preparación por plato: {{tiempo_max}}
+Restricciones dietéticas o alergias: {{restricciones}}
+Estilo de cocina deseado: {{estilo}}
+
+Para cada plato, incluye:
+- Nombre atractivo
+- Ingredientes utilizados
+- Breve descripción para incluir en el menú
+- Costo estimado de preparación
+- Precio sugerido de venta
+```
+
+Este prompt puede ser refinado iterativamente para ajustar el tono, la precisión de los resultados o la extensión de las respuestas generadas.
+
+---
+
+## Resultados Esperados
+
+* Generación automática de menús realistas y adaptados al contexto comercial del restaurante.
+* Recomendaciones que integran creatividad culinaria con viabilidad financiera.
+* Posibilidad de integrar esta herramienta en flujos operativos reales del restaurante para la planificación diaria o semanal.
+
+---
+
+## Plan de Integración Real
+
+1. Fase inicial: uso como asistente de planificación interna del chef o administrador.
+2. Integración con sistema de inventario digital (opcional, en una segunda etapa).
+3. Generación automática del menú diario o semanal para impresión o aplicaciones móviles.
+4. Ampliación para generación de menús especiales (festivos, por temporada, etc.).
+
+---
+
+## Entregables
+
+* Documento técnico en formato Markdown con estructura académica.
+* Código fuente en Python completamente funcional.
+* Interfaz desarrollada en Bolt.new conectada con Make.com.
+* Instrucciones de ejecución y despliegue (README).
+
+---
+
+## Conclusiones
+
+El asistente inteligente para el diseño de menús representa una solución concreta a uno de los desafíos cotidianos del sector gastronómico: la creación de menús rentables, atractivos y operativamente viables. Utilizando modelos de lenguaje avanzados, como GPT-4-turbo, y herramientas accesibles como Bolt y Make, se construye una aplicación con impacto directo en la toma de decisiones comerciales.
+
+---
+
+## Créditos
+
+* **Autor:** \[Nombre del participante]
+* **Curso:** Diplomado en Inteligencia Artificial para los Negocios
+* **Institución:** \[Nombre de la institución]

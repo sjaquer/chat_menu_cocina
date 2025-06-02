@@ -4,338 +4,475 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Asistente Inteligente de Menú Gastronómico</title>
-  <style>
-    /* ----------- Estilos Generales ----------- */
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
-      color: #333;
-    }
-
-    header {
-      background-color: #2c3e50;
-      padding: 1rem 0;
-      text-align: center;
-      color: #fff;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 1.8rem;
-    }
-
-    main {
-      max-width: 900px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-    }
-
-    section#intro p {
-      font-size: 1rem;
-      line-height: 1.5;
-    }
-
-    /* ----------- Formulario ----------- */
-    form {
-      background-color: #fff;
-      padding: 1.5rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      margin-top: 1rem;
-    }
-
-    .form-group {
-      margin-bottom: 1rem;
-    }
-
-    .form-group label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 0.3rem;
-      font-size: 1rem;
-    }
-
-    .form-group input[type="text"],
-    .form-group input[type="number"],
-    .form-group textarea {
-      width: 100%;
-      padding: 0.5rem;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-
-    .form-group textarea {
-      resize: vertical;
-      min-height: 80px;
-    }
-
-    .error-message {
-      color: #e74c3c;
-      font-size: 0.9rem;
-      margin-top: 0.2rem;
-      display: block;
-      height: 1.2rem; /* reserva espacio aunque esté vacío */
-    }
-
-    button#btn-generate {
-      background-color: #2980b9;
-      color: #fff;
-      border: none;
-      padding: 0.8rem 1.2rem;
-      font-size: 1rem;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    button#btn-generate:disabled {
-      background-color: #95a5a6;
-      cursor: not-allowed;
-    }
-
-    button#btn-generate:hover:not(:disabled) {
-      background-color: #1c5980;
-    }
-
-    #loading-spinner {
-      display: none;
-      margin-left: 1rem;
-      font-style: italic;
-      font-size: 0.95rem;
-      color: #555;
-    }
-
-    /* ----------- Resultado ----------- */
-    #result-section {
-      margin-top: 2rem;
-    }
-
-    #result-section h2 {
-      margin-bottom: 0.5rem;
-      font-size: 1.4rem;
-    }
-
-    #menu-result {
-      background-color: #fff;
-      padding: 1rem;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      white-space: pre-wrap; /* respeta saltos de línea */
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-      min-height: 100px;
-    }
-
-    /* ----------- Responsive (2 columnas en pantallas anchas) ----------- */
-    @media (min-width: 768px) {
-      .form-row {
-        display: flex;
-        gap: 1rem;
-      }
-      .form-row .form-group {
-        flex: 1;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header>
-    <h1>Asistente Inteligente de Menú Gastronómico</h1>
-  </header>
-
-  <main>
-    <section id="intro">
-      <p>
-        Completa los campos a continuación para generar un menú optimizado para tu restaurante. Cada plato incluirá
-        nombre, ingredientes, descripción, costo estimado y precio sugerido.
-      </p>
-    </section>
-
-    <section id="form-section">
-      <form id="menu-form">
-        <!-- Primera fila: Perfil del cliente y Presupuesto -->
-        <div class="form-row">
-          <div class="form-group">
-            <label for="perfil_cliente">Perfil del cliente</label>
-            <input
-              type="text"
-              id="perfil_cliente"
-              name="perfil_cliente"
-              placeholder="Ej. Familias con niños, ejecutivos, foodies, etc."
-              required
-            />
-            <small class="error-message" id="error-perfil_cliente"></small>
+  <div class="messenger-container">
+    <div class="chat-sidebar">
+      <div class="chat-header">
+        <h1>Asistente Chef</h1>
+      </div>
+      <div class="chat-info">
+        <p>Este asistente te ayudará a generar un menú personalizado para tu restaurante.</p>
+      </div>
+      <div class="creator-info">
+        <h2 style="color: #000;">Sobre el Creador</h2>
+        <div class="creator-profile">
+          <img src="https://avatars.githubusercontent.com/u/72231436?v=4" alt="Sebastian Jaque" class="creator-img">
+            <h3 style="color: #000;">Sebastian Jaque</h3>
+            <p class="creator-role" style="color: #000;">Desarrollador & Estudiante</p>
           </div>
+          <div class="app-details">
+            <p style="color: #000;"><strong style="color: #000;">Versión:</strong> 1.0.0</p>
+            <p style="color: #000;"><strong style="color: #000;">Última actualización:</strong> Junio 2025</p>
+            <p style="color: #000;"><strong style="color: #000;">Tecnologías:</strong> Python, Flask, OpenAI API</p>
+          </div>
+          <div class="contact-info">
+            <h4 style="color: #000;">Contacto</h4>
+            <p style="color: #000;">🎓 Estudiante de Diplomado en IA</p>
+            <p style="color: #000;">💻 Programador Junior</p>
+            <p style="color: #000;">📧 sjaquer@outlook.es</p>
+        </div>
+      </div>
+    </div>
 
-          <div class="form-group">
-            <label for="presupuesto">Presupuesto máximo por plato (USD)</label>
-            <input
-              type="number"
-              id="presupuesto"
-              name="presupuesto"
-              step="0.01"
-              min="0.01"
-              placeholder="Por ejemplo: 5.00"
-              required
-            />
-            <small class="error-message" id="error-presupuesto"></small>
+    <div class="chat-main">
+      <div class="chat-header">
+        <div class="chat-header-info">
+          <img src="{{ url_for('static', filename='chef_ico.webp') }}" alt="Chef Assistant">
+          <span>Asistente Chef</span>
+          <span class="status-dot"></span>
+        </div>
+      </div>
+
+      <div class="chat-messages" id="chat-messages">
+        <!-- Aquí se agregarán los mensajes dinámicamente -->
+        <div class="message system">
+          <div class="message-content">
+            Hola, soy tu asistente chef. Para generar un menú personalizado, necesito algunos datos:
           </div>
         </div>
+      </div>
 
-        <!-- Segunda fila: Tiempo máximo y Estilo -->
-        <div class="form-row">
-          <div class="form-group">
-            <label for="tiempo_max">Tiempo máximo de preparación (minutos)</label>
-            <input
-              type="number"
-              id="tiempo_max"
-              name="tiempo_max"
-              min="1"
-              placeholder="Por ejemplo: 20"
-              required
-            />
-            <small class="error-message" id="error-tiempo_max"></small>
-          </div>
-
-          <div class="form-group">
-            <label for="estilo">Estilo de cocina deseado</label>
-            <input
-              type="text"
-              id="estilo"
-              name="estilo"
-              placeholder="Ej. Mediterránea, gourmet, casera, fusión asiática"
-              required
-            />
-            <small class="error-message" id="error-estilo"></small>
-          </div>
-        </div>
-
-        <!-- Tercera fila: Ingredientes y Restricciones -->
-        <div class="form-row">
-          <div class="form-group">
-            <label for="ingredientes">Ingredientes disponibles</label>
-            <textarea
-              id="ingredientes"
-              name="ingredientes"
-              placeholder="Lista de ingredientes separados por comas"
-              required
-            ></textarea>
-            <small class="error-message" id="error-ingredientes"></small>
-          </div>
-
-          <div class="form-group">
-            <label for="restricciones">Restricciones dietéticas o alergias</label>
-            <input
-              type="text"
-              id="restricciones"
-              name="restricciones"
-              placeholder="Ej. Sin gluten, vegano, ninguno"
-              required
-            />
-            <small class="error-message" id="error-restricciones"></small>
-          </div>
-        </div>
-
-        <!-- Botón de envío -->
-        <div class="form-group">
-          <button type="submit" id="btn-generate">Generar Menú</button>
-          <span id="loading-spinner">Generando menú...</span>
-        </div>
+      <!-- Formulario oculto que mantiene la lógica original -->
+      <form id="menu-form" style="display: none;">
+        <input type="text" id="perfil_cliente" name="perfil_cliente">
+        <input type="text" id="presupuesto" name="presupuesto">
+        <input type="text" id="tiempo_max" name="tiempo_max">
+        <input type="text" id="estilo" name="estilo">
+        <input type="text" id="ingredientes" name="ingredientes">
+        <input type="text" id="restricciones" name="restricciones">
       </form>
-    </section>
 
-    <section id="result-section">
-      <h2>Menú Generado</h2>
-      <div id="menu-result">Aquí aparecerá el menú generado.</div>
-    </section>
-  </main>
+      <div class="chat-input-container">
+        <input type="text" id="user-input" placeholder="Escribe tu respuesta...">
+        <button id="send-btn">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+  </div>
 
   <script>
-    // Función para validar y enviar el formulario
-    document.getElementById("menu-form").addEventListener("submit", async function (e) {
-      e.preventDefault();
+    // Definir las preguntas
+    const questions = [
+        { 
+            field: 'perfil_cliente', 
+            question: '¿Cuál es el perfil de tus clientes? Por ejemplo: familias con niños, ejecutivos, turistas, etc.'
+        },
+        { 
+            field: 'presupuesto', 
+            question: '¿Cuál es el presupuesto máximo que deseas por plato? Por ejemplo: 20 soles, 15 euros, etc.)'
+        },
+        { 
+            field: 'tiempo_max', 
+            question: '¿Cuánto tiempo máximo de preparación deseas por plato? Por ejemplo: 30 minutos, 1 hora, etc.'
+        },
+        { 
+            field: 'estilo', 
+            question: '¿Qué estilo de cocina deseas para tu menú? Por ejemplo: fusión peruana-japonesa, alemana etc.'
+        },
+        { 
+            field: 'ingredientes', 
+            question: '¿Qué ingredientes tienes disponibles? Puedes listarlos o mencionar los más importantes.'
+        },
+        { 
+            field: 'restricciones', 
+            question: '¿Hay alguna restricción dietética o alergia que deba considerar? Por ejemplo: sin gluten, sin lácteos, vegetariano, etc.'
+        }
+    ];
 
-      // Limpiar mensajes de error
-      ["perfil_cliente", "presupuesto", "tiempo_max", "estilo", "ingredientes", "restricciones"].forEach(function (
-        field
-      ) {
-        document.getElementById("error-" + field).innerText = "";
-      });
+    // Variable global para seguir la pregunta actual
+    let currentQuestion = 0;
 
-      // Obtener valores
-      const perfil = document.getElementById("perfil_cliente").value.trim();
-      const presupuesto = parseFloat(document.getElementById("presupuesto").value);
-      const tiempoMax = parseInt(document.getElementById("tiempo_max").value);
-      const estilo = document.getElementById("estilo").value.trim();
-      const ingredientes = document.getElementById("ingredientes").value.trim();
-      const restricciones = document.getElementById("restricciones").value.trim();
+    // Función para mostrar el indicador de escritura
+    function showTypingIndicator() {
+        const indicator = document.createElement('div');
+        indicator.className = 'typing-indicator';
+        indicator.innerHTML = '<span></span><span></span><span></span>';
+        document.getElementById('chat-messages').appendChild(indicator);
+        return indicator;
+    }
 
-      let isValid = true;
+    // Función para remover el indicador de escritura
+    function removeTypingIndicator(indicator) {
+        if (indicator) indicator.remove();
+    }
 
-      // Validaciones
-      if (!perfil) {
-        document.getElementById("error-perfil_cliente").innerText = "Este campo es obligatorio.";
-        isValid = false;
-      }
-      if (isNaN(presupuesto) || presupuesto <= 0) {
-        document.getElementById("error-presupuesto").innerText = "Ingrese un valor válido (> 0).";
-        isValid = false;
-      }
-      if (isNaN(tiempoMax) || tiempoMax <= 0) {
-        document.getElementById("error-tiempo_max").innerText = "Ingrese un valor válido (> 0).";
-        isValid = false;
-      }
-      if (!estilo) {
-        document.getElementById("error-estilo").innerText = "Este campo es obligatorio.";
-        isValid = false;
-      }
-      if (!ingredientes) {
-        document.getElementById("error-ingredientes").innerText = "Este campo es obligatorio.";
-        isValid = false;
-      }
-      if (!restricciones) {
-        document.getElementById("error-restricciones").innerText = "Este campo es obligatorio.";
-        isValid = false;
-      }
-      if (!isValid) return;
+    // Función para agregar mensajes al chat
+    function addMessage(content, type = 'system') {
+        const messagesContainer = document.getElementById('chat-messages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${type}`;
+        
+        if (content.includes('Menú Personalizado')) {
+            // Formatear el menú para mejor presentación
+            const formattedContent = content
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .split('\n\n').map(section => {
+                    if (section.includes('NOMBRE DEL PLATO')) {
+                        return `<div class="menu-section">
+                            <div class="menu-item">
+                                <div class="menu-item-header">
+                                    ${section.split('\n')[0]}
+                                </div>
+                                <div class="menu-item-content">
+                                    <div class="dish-details">
+                                        ${section.split('\n').slice(1).join('\n')}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+                    }
+                    return section;
+                }).join('\n');
+        
+            messageDiv.innerHTML = `
+                <div class="message-content menu-response">
+                    <div class="menu-text">${formattedContent}</div>
+                </div>
+            `;
+            
+            // Agregar botón para hacer preguntas adicionales
+            setTimeout(() => {
+                addMessage("¿Tienes alguna pregunta sobre el menú generado? Puedo ayudarte con:", 'system');
+                addQuickReplies([
+                    "Modificar algún plato",
+                    "Ajustar precios",
+                    "Cambiar ingredientes",
+                    "Preguntar sobre preparación",
+                    "Solicitar otro menú"
+                ]);
+            }, 1000);
+        } else {
+            messageDiv.innerHTML = `
+                <div class="message-content">
+                    ${content}
+                </div>
+            `;
+        }
+        
+        messagesContainer.appendChild(messageDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
 
-      // Mostrar spinner y deshabilitar botón
-      document.getElementById("btn-generate").disabled = true;
-      document.getElementById("loading-spinner").style.display = "inline";
+    // Agregar al array de quickReplies existente
+    function addQuickReplies(options) {
+        options.push("Sobre el creador");  // Añadir opción sobre el creador
 
-      const payload = {
-        perfil_cliente: perfil,
-        presupuesto: presupuesto,
-        tiempo_max: tiempoMax,
-        estilo: estilo,
-        ingredientes: ingredientes,
-        restricciones: restricciones,
-      };
+        const quickRepliesDiv = document.createElement('div');
+        quickRepliesDiv.className = 'quick-replies';
+        
+        options.forEach(option => {
+            const button = document.createElement('button');
+            button.className = 'quick-reply-btn';
+            button.textContent = option;
+            button.onclick = () => handleQuickReply(option);
+            quickRepliesDiv.appendChild(button);
+        });
+        
+        document.getElementById('chat-messages').appendChild(quickRepliesDiv);
+    }
 
-      try {
-        const response = await fetch("/api/generate-menu", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
+    // Función para manejar las respuestas rápidas
+    async function handleQuickReply(option) {
+        if (option === "Sobre el creador") {
+            const creatorInfo = `
+                **Sobre el Creador** 👨‍💻
+
+                Sebastian Jaque es un apasionado desarrollador de software y estudiante del Diplomado en Inteligencia Artificial. 
+                
+                **Experiencia y Estudios:**
+                - Desarrollador Junior con experiencia en Python y Web
+                - Estudiante de Diplomado en IA
+                - Fotografía y diseño gráfico como pasatiempos
+                
+                **Sobre esta Aplicación:**
+                Esta aplicación fue desarrollada como proyecto final del Diplomado, combinando tecnologías modernas como Python, Flask y la API de OpenAI para crear una herramienta útil en el ámbito gastronómico.
+                
+                **Objetivo del Proyecto:**
+                Facilitar la creación de menús personalizados utilizando IA, ayudando a chefs y restaurantes a optimizar sus ofertas gastronómicas.
+
+                **Contacto:**
+                📧 sjaquer@outlook.es
+                🌐 github.com/sjaquer
+            `;
+            
+            addMessage(creatorInfo, 'system');
+            return;
+        }
+        try {
+        const menuContent = document.querySelector('.menu-response .menu-text');
+        const previousMenu = menuContent ? menuContent.textContent : '';
+        
+        // Mostrar la opción seleccionada como mensaje del usuario
+        addMessage(option, 'user');
+        
+        // Mostrar indicador de escritura
+        const indicator = showTypingIndicator();
+
+        const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                message: option,
+                context: "menu_followup",
+                previousMenu: previousMenu,
+                lastQuestion: option  // Añadir la última pregunta para contexto
+            })
         });
 
-        if (!response.ok) throw new Error("Error en la petición");
-
         const data = await response.json();
-        const menuTexto = data.menu || "No se recibió un menú válido.";
+        removeTypingIndicator(indicator);
 
-        document.getElementById("menu-result").innerText = menuTexto;
-      } catch (error) {
-        document.getElementById("menu-result").innerText =
-          "Error al generar el menú. Por favor inténtalo de nuevo más tarde.";
-      } finally {
-        // Ocultar spinner y habilitar botón nuevamente
-        document.getElementById("btn-generate").disabled = false;
-        document.getElementById("loading-spinner").style.display = "none";
-      }
+        if (data.error) {
+            addMessage("Lo siento, hubo un error: " + data.error, 'system');
+            return;
+        }
+
+        // Mostrar la respuesta de la IA
+        if (data.response) {
+            addMessage(data.response, 'system');
+
+            // Si es solicitud de nuevo menú
+            if (data.action === "restart") {
+                setTimeout(() => {
+                    currentQuestion = 0;
+                    document.querySelectorAll('#menu-form input').forEach(input => input.value = '');
+                    askNextQuestion();
+                }, 1000);
+            } else {
+                // Mostrar nuevas opciones después de cada respuesta
+                setTimeout(() => {
+                    addQuickReplies([
+                        "Modificar otro plato",
+                        "Hacer otra pregunta",
+                        "Solicitar otro menú"
+                    ]);
+                }, 1000);
+            }
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        addMessage("Lo siento, hubo un error al procesar tu solicitud.", 'system');
+    }
+}
+
+    // Agregar después de handleQuickReply
+    async function handleOpenQuestion(question) {
+        addMessage(question, 'user');
+        
+        const indicator = showTypingIndicator();
+        
+        try {
+            const menuContent = document.querySelector('.menu-response .menu-text');
+            const previousMenu = menuContent ? menuContent.textContent : '';
+            
+            const response = await fetch("/api/chat", {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    message: question,
+                    context: "open_question",
+                    previousMenu: previousMenu
+                })
+            });
+
+            const data = await response.json();
+            removeTypingIndicator(indicator);
+
+            if (data.response) {
+                addMessage(data.response, 'system');
+                
+                // Agregar opciones de seguimiento
+                if (data.followUpOptions) {
+                    setTimeout(() => {
+                        addMessage("¿Hay algo más en lo que pueda ayudarte?", 'system');
+                        addQuickReplies([
+                            "Hacer otra pregunta",
+                            "Modificar el menú",
+                            "Solicitar otro menú"
+                        ]);
+                    }, 1000);
+                }
+            }
+        } catch (error) {
+            removeTypingIndicator(indicator);
+            addMessage("Lo siento, hubo un error al procesar tu solicitud.", 'system');
+        }
+    }
+
+    // Función para hacer la siguiente pregunta
+    function askNextQuestion() {
+        if (currentQuestion < questions.length) {
+            const indicator = showTypingIndicator();
+            setTimeout(() => {
+                removeTypingIndicator(indicator);
+                addMessage(questions[currentQuestion].question);
+            }, 1000);
+        } else {
+            // Procesar el formulario cuando todas las preguntas han sido respondidas
+            processForm();
+        }
+    }
+
+    // Función para procesar el formulario
+    async function processForm() {
+        // Obtener todos los valores como texto
+        const formData = {
+            perfil_cliente: document.getElementById('perfil_cliente').value.trim(),
+            presupuesto: document.getElementById('presupuesto').value.trim(),
+            tiempo_max: document.getElementById('tiempo_max').value.trim(),
+            estilo: document.getElementById('estilo').value.trim(),
+            ingredientes: document.getElementById('ingredientes').value.trim(),
+            restricciones: document.getElementById('restricciones').value.trim()
+        };
+
+        // Validar que ningún campo esté vacío
+        if (Object.values(formData).some(value => !value)) {
+            addMessage("Por favor, completa todos los campos antes de generar el menú.", 'system');
+            return;
+        }
+
+        try {
+            const indicator = showTypingIndicator();
+            addMessage("Generando tu menú personalizado...", 'system');
+
+            const response = await fetch("/api/generate-menu", {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await response.json();
+            removeTypingIndicator(indicator);
+
+            if (data.menu) {
+                const formattedMenu = `Menú Personalizado\n\n${data.menu}`;
+                addMessage(formattedMenu, 'system');
+            } else if (data.error) {
+                addMessage(`Error: ${data.error}`, 'system');
+            } else {
+                addMessage("Hubo un error al generar el menú. Por favor, intenta de nuevo.", 'system');
+            }
+        } catch (error) {
+            removeTypingIndicator(indicator);
+            addMessage("Error al comunicarse con el servidor.", 'system');
+            console.error("Error:", error);
+        }
+    }
+
+    // Función para manejar las respuestas del usuario
+    function handleUserInput() {
+        const userInput = document.getElementById('user-input');
+        const value = userInput.value.trim();
+        
+        if (!value) return;
+
+        // Si es una pregunta sobre el creador
+        if (value.toLowerCase().includes('creador') || value.toLowerCase().includes('creator')) {
+            showCreatorInfo();
+            userInput.value = ''; // Limpiar input
+            return;
+        }
+
+        // Si estamos en modo chat (después del menú)
+        if (currentQuestion >= questions.length) {
+            addMessage(value, 'user');
+            handleOpenQuestion(value);
+            userInput.value = ''; // Limpiar input
+            return;
+        }
+
+        // Si estamos en el formulario inicial
+        addMessage(value, 'user');
+        const field = questions[currentQuestion].field;
+        document.getElementById(field).value = value;
+        userInput.value = ''; // Limpiar input
+        currentQuestion++;
+        askNextQuestion();
+    }
+
+    // Agregar función para mostrar info del creador
+    function showCreatorInfo() {
+        const creatorInfo = `
+            **Sobre el Creador** 👨‍💻
+
+            Mi creador es Sebastian Jaque, un desarrollador de software y estudiante 
+            del Diplomado en Inteligencia Artificial.
+
+            **Experiencia y Estudios:**
+            - 🎓 Estudiante de Diplomado en IA
+            - 💻 Programador Junior con experiencia en Python y desarrollo web
+            - 📸 Aficionado a la fotografía y diseño gráfico
+
+            **Sobre esta Aplicación:**
+            Esta aplicación fue desarrollada como proyecto final del Diplomado,
+            utilizando tecnologías modernas como Python, Flask y la API de OpenAI.
+
+            **Contacto:**
+            📧 sjaquer@outlook.es
+            🌐 github.com/sjaquer
+        `;
+        
+        addMessage(creatorInfo, 'system');
+        
+        // Agregar opciones de continuación
+        setTimeout(() => {
+            addQuickReplies([
+                "Volver al menú",
+                "Hacer una pregunta",
+                "Solicitar otro menú"
+            ]);
+        }, 1000);
+    }
+
+    // Event Listeners
+    document.addEventListener('DOMContentLoaded', function() {
+        // Listener para el botón de enviar
+        document.getElementById('send-btn').addEventListener('click', handleUserInput);
+
+        // Listener para la tecla Enter
+        document.getElementById('user-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleUserInput();
+            }
+        });
+
+        // Iniciar la conversación con la primera pregunta
+        askNextQuestion();
     });
-  </script>
+</script>
 </body>
 </html>
