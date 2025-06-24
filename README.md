@@ -91,8 +91,8 @@ asistente_menu_ia/
 ### 1. Clona el repositorio
 
 ```bash
-git clone https://github.com/sjaquer/trabajo_final_ia.git
-cd trabajo_final_ia
+git clone https://github.com/sjaquer/chat_menu_cocina.git
+cd chat_menu_cocina
 ```
 
 ### 2. Crea un entorno virtual (opcional)
